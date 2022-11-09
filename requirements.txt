@@ -1,0 +1,9 @@
+requests[security]
+google-cloud-bigquery
+pandas-gbq
+pandas
+db-dtypes
+lxml
+google-cloud
+google-cloud-storage
+BeautifulSoup

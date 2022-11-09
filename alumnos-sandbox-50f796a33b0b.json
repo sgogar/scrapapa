@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "alumnos-sandbox",
+  "private_key_id": "50f796a33b0b764251c7b113b11e190763a20afd",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDAyBvp6usyslwr\nDcOeO70kHLwa6/LgnjQDWcnjXvlTcDJ/aStIu8Vw1lKENIX6ASYaFIjgN88liWVM\nobaVPZUYwndiSUzZBni9P2hup0WXFgYXilHl/BQ9Y/X3rPVJOt4bCboDYfqtslJW\n/VUfkac2TvGK9/2/h5N5mdYmBzb1dtmzATsIz9Y7W4/hI2qVwuRK04vz2WtNmOI8\nZP+PAcp0n5JoodQKPi+0FAnhsCkaGiO6pRSD8EW3NOkNrgIdWx7S5K9WtyVe7aBF\njY3u7GI+8fN3bzRvftK1cB9vv5SLecWkfISl2BUt7VtAWaPdNtY5a7du0zShtxk9\nr9kAUBFFAgMBAAECggEANO17xHAr3MJdTbC8uU+7cRO2jUmkaAjnTNg09ojXuRG/\nu31bVd+/qGgfRY7KDcaM+HIU1kJcS/j5590qLLU4nxCdCE4JnDgLpCGpgV/JWl7A\nk2v1akgYIna0TCifO1i/K/syp8UZtuCTfLCW01EA8IciB75oW1JUqfkTc2NdsmxR\nBx4LbMJ/d+d3HU5MZp3zIukv7mVdLiE2W7NMznqdOCGJzu1dmU6rc3pHI3vWKiMC\n+YPmYu3+1+ZmCzQB+W6pEBGnCZLztY2v01ra38HwCAa1a14VWTWT3LHu3bFAjcFl\n1x2dQlvkPlwO/+G+XhtHcBvtRIxOy+2ufrVac9oAjQKBgQD8MF3x+aTrRKiLO5ew\nukxxEv4fCV8y0AT0Jn3LAVZ+nf110LorvkpXUmn4ZJAWka9mz7XZOTGn0BbuGfw0\nGamuZaf9NgS9rrhL+mHxGwNXYVGsG7EIXL6KOk11gD+/1WYzyJC0ChytDrDTZI7b\nxtm5BOPvWgzyZLrc7P7YJoROlwKBgQDDsepm+AGGqp/aZLuFbeAjKRbRhryVvxdQ\n/4cak5/jzwZcf3HmqV4+a73Ow5Tb2yJ1mcf6h5ddm+uD5lV+F0LweviOvXVdKrQi\nx8u6f4c3JJyv39clWoRXMEk90vw4fYk5jedmIND7TfhnMUawBCD3MoTjUg82uX/z\nPGP8dzg2gwKBgEFNHOZtaEDrdGEpOywt8WFOM7NBr/7uUnoOBYCthgIfUuRQ+gQd\nsA5QbtQ85fqSGsMagdIPt0Xm4ikhXWb4RjG8bPVqKWwcc+homzfdcM4NiyJvwTWT\nHluYoToNzXQVA/PguWeFPsupBCyY200ZfoMkOwldXgDeCGzwiUTbJGNdAoGAVW+j\nanj0EZsEVxCLXeFubWtO7wLn6miXAWHN1iiFMav8lv18+LsQziezokV5A9NT5AvT\nZukziEa+N8Ojp3z4WI0XXxoP1zEBm/2mUDHFEqoFTjNndoNiK76E+1zViMQl2N6/\nG7NQCacsv8Cfn9Dto36GzcfRpI6v8b132Y0jGYkCgYEAsPDjEPZCzndiMB48Mjso\ndQeJR8y2ofAbkDTCzqhP4oDjAeWPuwc2SxEzg1A/asvjLKvQJR1hZJm+aplJYJ3I\nXjfoawF+UWedXRHDDyd1NrD5uJ9qmNqTPsnc4KSB/Qv/jPhkwnWbfP14CFpQ8sln\nA2Rpxw3h7Z6e/rsvTaXley8=\n-----END PRIVATE KEY-----\n",
+  "client_email": "big-query@alumnos-sandbox.iam.gserviceaccount.com",
+  "client_id": "108403265390589728110",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/big-query%40alumnos-sandbox.iam.gserviceaccount.com"
+}
