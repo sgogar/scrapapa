@@ -6,4 +6,4 @@ db-dtypes
 lxml
 google-cloud
 google-cloud-storage
-BeautifulSoup
+BeautifulSoup4
