@@ -1,32 +1,42 @@
+import pandas as pd
+from google.cloud import bigquery
+import pandas_gbq as pdbq
 from bs4 import BeautifulSoup
 import requests
 import json
-from google.cloud import bigquery
-import pandas as pd
-import pandas_gbq as pdbq
 
-def product_getter_dia(urls,fuente):
-  productos = []
-  for url in urls:
-    result = requests.get(url)
-    content = result.text
+urls_dia = ["https://diaonline.supermercadosdia.com.ar/papas?_q=papas&map=ft&page=1",
+            "https://diaonline.supermercadosdia.com.ar/papas?_q=papas&map=ft&page=2",
+            "https://diaonline.supermercadosdia.com.ar/papas?_q=papas&map=ft&page=3",
+            "https://diaonline.supermercadosdia.com.ar/papas?_q=papas&map=ft&page=4"]
+
+urls_vea = ["https://www.vea.com.ar/papas?_q=papas&map=ft",
+            "https://www.vea.com.ar/papas?_q=papas&map=ft&page=2"]
+
+urls_disco = ["https://www.disco.com.ar/papas?_q=papas&map=ft",
+              "https://www.disco.com.ar/papas?_q=papas&map=ft&page=2",
+              "https://www.disco.com.ar/papas?_q=papas&map=ft&page=3"]
+
+def get_matches(url,fuente):
+    print(fuente)
+    web = url
+    productos = []
+    response = requests.get(web)
+    content = response.text
     soup = BeautifulSoup(content, 'lxml')
-    data = json.loads(soup.findAll('script', type='application/ld+json')[1].text)
-    items = data['itemListElement']
-    
-  
+    items = json.loads(soup.find_all('script', type='application/ld+json')[1].text)['itemListElement']
+
     for item in items:
-      producto = {}
-      item_nombre = item["item"]["name"]
-      item_marca = item["item"]["brand"]["name"]
-      item_precio = item["item"]["offers"]["offers"][0]["price"]
-      item_sku = item["item"]["sku"]
-      producto["nombre"] = item_nombre
-      producto["marca"] = item_marca
-      producto["precio"] = item_precio
-      producto["sku"] = item_sku
-      producto["fuente"] = fuente
-  return productos
+      nombre = item["item"]["name"]
+      marca = item["item"]["brand"]["name"]
+      precio = item["item"]["offers"]["offers"][0]["price"]
+      sku = item["item"]["sku"]
+      producto = {'nombre': nombre,'marca': marca,'precio': precio,'sku': sku}
+      productos.append(producto)
+
+    df_productos = pd.DataFrame(productos)
+    df_productos['fuente'] = fuente
+    return df_productos
 
 def create_table_in_bq(productos) -> None:
     gcp_project = "alumnos-sandbox"
@@ -69,31 +79,17 @@ def print_get_all_bquery() -> None:
 
     print(result_df)
 
-
-
 if __name__ == '__main__':
-  urls_dia = ["https://diaonline.supermercadosdia.com.ar/papas?_q=papas&map=ft&page=1",
-       "https://diaonline.supermercadosdia.com.ar/papas?_q=papas&map=ft&page=2",
-       "https://diaonline.supermercadosdia.com.ar/papas?_q=papas&map=ft&page=3",
-       "https://diaonline.supermercadosdia.com.ar/papas?_q=papas&map=ft&page=4"]
+  #dia
+  dia_productos = [get_matches(url,"dia") for url in urls_dia]
+  #vea
+  #vea_productos = [get_matches(url,"vea") for url in urls_vea]
+  #disco
+  #disco_productos = [get_matches(url,"disco") for url in urls_disco]
+  #results
+  results = dia_productos #+ disco_productos + vea_productos
 
-  #urls_vea = ["https://www.vea.com.ar/papas?_q=papas&map=ft",
-  #     "https://www.vea.com.ar/papas?_q=papas&map=ft&page=2"]
-
-  #urls_disco = ["https://www.disco.com.ar/papas?_q=papas&map=ft",
-  #            "https://www.disco.com.ar/papas?_q=papas&map=ft&page=2",
-  #            "https://www.disco.com.ar/papas?_q=papas&map=ft&page=3"]
-
-  #json_dia = product_getter_dia(urls_dia,"dia")
-  #create_dia_table_in_bq(json_dia)
-  #json_vea = product_getter(urls_vea)
-  #json_vea = product_getter(urls_disco)
-  
-  #productos = product_getter(urls_dia)
-  
-  # add_data_to_bigquery_and_print_df()
-  #create_table_in_bq(productos)
-
-  #create_table_in_bq(json_dia)
-  #print(json_dia)
-  print_get_all_bquery()
+  df_productos = pd.concat(results, ignore_index=True)
+  df_productos.to_csv("./csvs/productos.csv", index=False)
+  df = pd.read_csv('./csvs/productos.csv')
+  print(df.sample(5))
