@@ -1,9 +1,16 @@
 import pandas as pd
 from google.cloud import bigquery
+from google.oauth2 import service_account
 import pandas_gbq as pdbq
 from bs4 import BeautifulSoup
 import requests
 import json
+import time
+
+key_path = "./../alumnos-sandbox-50f796a33b0b.json"
+project_id = "alumnos-sandbox"
+table_id = 'precios_productos.grupo_1_papa'
+credentials = service_account.Credentials.from_service_account_file(key_path)
 
 urls_dia = ["https://diaonline.supermercadosdia.com.ar/papas?_q=papas&map=ft&page=1",
             "https://diaonline.supermercadosdia.com.ar/papas?_q=papas&map=ft&page=2",
@@ -17,11 +24,12 @@ urls_disco = ["https://www.disco.com.ar/papas?_q=papas&map=ft",
               "https://www.disco.com.ar/papas?_q=papas&map=ft&page=2",
               "https://www.disco.com.ar/papas?_q=papas&map=ft&page=3"]
 
-def get_matches(url,fuente):
+def get_matches(web,fuente):
     print(fuente)
-    web = url
+    print(web)
     productos = []
     response = requests.get(web)
+    time.sleep(3)
     content = response.text
     soup = BeautifulSoup(content, 'lxml')
     items = json.loads(soup.find_all('script', type='application/ld+json')[1].text)['itemListElement']
@@ -38,26 +46,33 @@ def get_matches(url,fuente):
     df_productos['fuente'] = fuente
     return df_productos
 
-def create_table_in_bq(productos) -> None:
-    gcp_project = "alumnos-sandbox"
-    table_id = "productos_papa.new_table"
+def create_csv() -> None:
+    #dia
+    dia_productos = [get_matches(url,"dia") for url in urls_dia]
+    #vea
+    #vea_productos = [get_matches(url,"vea") for url in urls_vea]
+    #disco
+    #disco_productos = [get_matches(url,"disco") for url in urls_disco]
+    results = dia_productos #+ vea_productos #+ disco_productos
+    df_productos = pd.concat(results, ignore_index=True)
+    df_productos.to_csv("./../csvs/productos.csv", index=False)
+    
 
-    for producto in productos:
-      df = pd.DataFrame(
-            {
-                "nombre": producto['name'],
-                "marca": producto['marca'],
-                "precio": producto['precio']
-            }
-        )
-    pdbq.to_gbq(df, table_id, project_id=gcp_project, if_exists="append")
+def create_table_in_bq(df) -> None:
+    pdbq.to_gbq(df, table_id, project_id=project_id, credentials=credentials, if_exists="append")
 
-def create_dia_table_in_bq(df) -> None:
-    gcp_project = "alumnos-sandbox"
-    #bq_dataset = "precios_productos"
-    table_name = "precios_productos.precios_papa"
-    df = pd.DataFrame.from_dict(df)
-    pdbq.to_gbq(df, table_name, project_id=gcp_project, if_exists="append")
+def get_all_bq() -> None:
+    client = bigquery.Client(credentials=credentials, project=credentials.project_id)
+    sql_query = f"""
+        SELECT *
+        FROM `{project_id}.{table_id}`
+        LIMIT 20
+        """
+
+    query = client.query(sql_query)
+    results = query.result()
+    result_df = results.to_dataframe()
+    print(result_df)
 
 def print_get_all_bquery() -> None:
     gcp_project = "alumnos-sandbox"
@@ -76,20 +91,17 @@ def print_get_all_bquery() -> None:
     query = client.query(sql_query)
     results = query.result()
     result_df = results.to_dataframe()
-
     print(result_df)
 
 if __name__ == '__main__':
-  #dia
-  dia_productos = [get_matches(url,"dia") for url in urls_dia]
-  #vea
-  #vea_productos = [get_matches(url,"vea") for url in urls_vea]
-  #disco
-  #disco_productos = [get_matches(url,"disco") for url in urls_disco]
-  #results
-  results = dia_productos #+ disco_productos + vea_productos
+    #creo csv
+    #create_csv()
 
-  df_productos = pd.concat(results, ignore_index=True)
-  df_productos.to_csv("./csvs/productos.csv", index=False)
-  df = pd.read_csv('./csvs/productos.csv')
-  print(df.sample(5))
+    #leo csv
+    df_productos = pd.read_csv('./../csvs/productos.csv')
+
+    #creo tabla en bq
+    #create_table_in_bq(df_productos)
+
+    #leo tabla de bq
+    get_all_bq()
