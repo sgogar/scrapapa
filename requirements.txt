@@ -7,3 +7,4 @@ lxml
 google-cloud
 google-cloud-storage
 BeautifulSoup4
+re

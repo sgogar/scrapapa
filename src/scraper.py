@@ -6,10 +6,11 @@ from bs4 import BeautifulSoup
 import requests
 import json
 import time
+import re
 
 key_path = "./../alumnos-sandbox-50f796a33b0b.json"
 project_id = "alumnos-sandbox"
-table_id = 'precios_productos.grupo_1_papa'
+table_id = 'precios_productos.grupo_1_papa_v2'
 credentials = service_account.Credentials.from_service_account_file(key_path)
 
 urls_dia = ["https://diaonline.supermercadosdia.com.ar/papas?_q=papas&map=ft&page=1",
@@ -56,7 +57,6 @@ def create_csv() -> None:
     results = dia_productos + vea_productos #+ disco_productos
     df_productos = pd.concat(results, ignore_index=True)
     df_productos.to_csv("./../csvs/productos.csv", index=False)
-    
 
 def create_table_in_bq(df) -> None:
     pdbq.to_gbq(df, table_id, project_id=project_id, credentials=credentials, if_exists="append")
@@ -93,12 +93,28 @@ def print_get_all_bquery() -> None:
     result_df = results.to_dataframe()
     print(result_df)
 
+def generate_categories(df_papita):
+    df_fritas = df_papita[df_papita["nombre"].str.contains(r"(fritas)", regex=True, flags=re.IGNORECASE)]
+    df_fritas["categoria"] = "papas fritas"
+
+    df_papa_normal = df_papita[df_papita["nombre"].str.contains(r"(?:negra|blanca|papa mini)", regex=True, flags=re.IGNORECASE)]
+    df_papa_normal["categoria"] = "papa normal"
+
+    df_papa_otros = df_papita[~df_papita["nombre"].str.contains(r"(?:negra|blanca|papa mini|fritas)", regex=True, flags=re.IGNORECASE)]
+    df_papa_otros["categoria"] = "otros"
+
+    df_final = pd.concat([df_fritas, df_papa_normal, df_papa_otros])
+    return df_final
+
 if __name__ == '__main__':
     #creo csv
     #create_csv()
 
     #leo csv
     #df_productos = pd.read_csv('./../csvs/productos.csv')
+
+    #genero categorias
+    #df_productos = generate_categories(df_productos)
 
     #creo tabla en bq
     #create_table_in_bq(df_productos)
