@@ -50,10 +50,10 @@ def create_csv() -> None:
     #dia
     dia_productos = [get_matches(url,"dia") for url in urls_dia]
     #vea
-    #vea_productos = [get_matches(url,"vea") for url in urls_vea]
+    vea_productos = [get_matches(url,"vea") for url in urls_vea]
     #disco
     #disco_productos = [get_matches(url,"disco") for url in urls_disco]
-    results = dia_productos #+ vea_productos #+ disco_productos
+    results = dia_productos + vea_productos #+ disco_productos
     df_productos = pd.concat(results, ignore_index=True)
     df_productos.to_csv("./../csvs/productos.csv", index=False)
     
@@ -66,7 +66,7 @@ def get_all_bq() -> None:
     sql_query = f"""
         SELECT *
         FROM `{project_id}.{table_id}`
-        LIMIT 20
+        LIMIT 1000
         """
 
     query = client.query(sql_query)
@@ -98,7 +98,7 @@ if __name__ == '__main__':
     #create_csv()
 
     #leo csv
-    df_productos = pd.read_csv('./../csvs/productos.csv')
+    #df_productos = pd.read_csv('./../csvs/productos.csv')
 
     #creo tabla en bq
     #create_table_in_bq(df_productos)
