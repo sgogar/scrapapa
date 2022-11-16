@@ -20,11 +20,15 @@ Disco
 
 ## Instalación
 
-## ¿Cómo se corre?
+>`git clone https://github.com/sgogar/scrapapa `
 
-Con la plataforma docker: 
+crear la imagen con Docker:
 
 >`docker build -t scrapapa`
+
+
+## ¿Cómo se corre?
+
 
 >`docker run scrapapa`
 
