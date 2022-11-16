@@ -22,7 +22,16 @@ Disco
 
 ## ¿Cómo se corre?
 
+Con la plataforma docker: 
+
+>`docker build -t scrapapa`
+
+>`docker run scrapapa`
+
+
+
 ## Versiones
+1.0 - 16-11-2022
 
 ## Licencias
 
